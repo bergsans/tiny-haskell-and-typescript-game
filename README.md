@@ -1,1 +1,1 @@
-# tiny-haskell-and-typescript-game
+![](hs-ts-a-tiny-game.png)
