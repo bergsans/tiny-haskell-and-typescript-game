@@ -1,38 +1,60 @@
---                                                                                                                                       
---                                ,,                                                                                                     
---       db          MMP""MM""YMM db                            .g8"""bgd                                                                
---      ;MM:         P'   MM   `7                             .dP'     `M                                                                
---     ,V^MM.             MM    `7MM `7MMpMMMb.`7M'   `MF'    dM'       `  ,6"Yb. `7MMpMMMb.pMMMb.  .gP"Ya                               
---    ,M  `MM             MM      MM   MM    MM  VA   ,V      MM          8)   MM   MM    MM    MM ,M'   Yb                              
---    AbmmmqMA            MM      MM   MM    MM   VA ,V       MM.    `7MMF',pm9MM   MM    MM    MM 8M""""""                              
---   A'     VML           MM      MM   MM    MM    VVV        `Mb.     MM 8M   MM   MM    MM    MM YM.    ,                              
--- .AMA.   .AMMA.       .JMML.  .JMML.JMML  JMML.  ,V           `"bmmmdPY `Moo9^Yo.JMML  JMML  JMML.`Mbmmd'                              
---                                                ,V                                                                                     
---                                             OOb"                                                                                      
---                                                                                                                                       
---                                                           ,,   ,,                                           ,,                        
---          `7MMF'  `7MMF'                `7MM             `7MM `7MM                                           db                        
---            MM      MM                    MM               MM   MM                                                                     
---            MM      MM   ,6"Yb.  ,pP"Ybd  MM  ,MP'.gP"Ya   MM   MM      `7M'   `MF'.gP"Ya `7Mb,od8 ,pP"Ybd `7MM  ,pW"Wq.`7MMpMMMb.     
---            MMmmmmmmMM  8)   MM  8I   `"  MM ;Y  ,M'   Yb  MM   MM        VA   ,V ,M'   Yb  MM' "' 8I   `"   MM 6W'   `Wb MM    MM     
--- mmmmm      MM      MM   ,pm9MM  `YMMMa.  MM;Mm  8M""""""  MM   MM         VA ,V  8M""""""  MM     `YMMMa.   MM 8M     M8 MM    MM     
---            MM      MM  8M   MM  L.   I8  MM `Mb.YM.    ,  MM   MM          VVV   YM.    ,  MM     L.   I8   MM YA.   ,A9 MM    MM  ,, 
---          .JMML.  .JMML.`Moo9^Yo.M9mmmP'.JMML. YA.`Mbmmd'.JMML.JMML.         W     `Mbmmd'.JMML.   M9mmmP' .JMML.`Ybmd9'.JMML  JMML.db 
---                                                                                                                                       
---                                                                                                                                       
---      By Claes-Magnus Berg <claes-magnus@herebeseaswines.net>
---
-----------------------------------------------------------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------------------------------------------------------
-
 {-# LANGUAGE ParallelListComp #-}
 
-module Lib (updateScreen) where
+module Lib
+  ( getPosition
+  , getCellX
+  , getCellY
+  , printable
+  , getTile
+  , level
+  , Cell
+  , Level
+  ) where
 
 import Data.List.Split
-import RawLevel  -- contains the level :: String
+-- import RawLevel -- contains the level :: String
 
-side = 36 -- a side of level
+rawLevel :: String -- raw string representation of level
+rawLevel = "\
+\xxxxxxxwxxxxxxbbbbbbxxxxxxxxxxxxxbbb\n\
+\xx..o.xxx....xxxbbbbxo.....xxxxxxxxx\n\
+\x..............xxxxbx.........xxxxxx\n\
+\x.................xxx..........xxxxx\n\
+\xxxxxxxxx...........x.......xxxxxxxx\n\
+\xxxxx............xxxxxx.o.......xxxx\n\
+\wwx............xxxxxxx.............x\n\
+\xxxxxxxxxxp......xx......xxx.......x\n\
+\x.oxxxxxxxx...............xxx......x\n\
+\x.....xxxxxxx............xxx...o...x\n\
+\xxxx.....xxx.............xxx.......x\n\
+\wwwx............o...q.............xx\n\
+\wx..................x...........xxxw\n\
+\xx.....xxxx.......xxx.........xxxwww\n\
+\x.o....xxxxxxx.....x.....xxxxxxwwwww\n\
+\x......xxxxxxx..........oxxxxxxxwwww\n\
+\xxx....xxxx......x.......xxxxxxxxwww\n\
+\wwx....xxxxo....xxx............oxxww\n\
+\wxxxx............................xxx\n\
+\xx...........xx..x..........q......x\n\
+\xxx..o.....xxxxxxxxx........x.....xx\n\
+\xp......xxxxxwwxxx........xxxx...xxx\n\
+\x..........xxwxxxx.........xxx.....x\n\
+\xxx........xxxxxxxxxx.......x......x\n\
+\xxxxx........x..xxxxx.............xx\n\
+\xxwxxxx...........................xw\n\
+\wwwwwxx..o....................xxxxxw\n\
+\wwwxxxxx............o.............xx\n\
+\wwwwx.............................xx\n\
+\xxxxxp....xxxx.............xxx...xxx\n\
+\x.oxxxx.....x......xxxx.xxxxwxx..xww\n\
+\xx...xx............xwwxxxwwwwx...xxx\n\
+\wx....x............xxwwwwwxxxx.....x\n\
+\wxx.................xxwwwwxo....x..x\n\
+\wwxxxxx.....q......xxwwwwxx...xxxx.x\n\
+\wwwxxxxxxxxxxxxxxxxxxwwwxxxxxxxwwxxx"
+
+side :: Int -- a side of level
+side = 36
 
 splitRawLevel :: String -> [[[Char]]] -- split level-string on ""
 splitRawLevel l = map (splitOn "") (lines l)
@@ -53,49 +75,38 @@ getX :: Int -> Int -> Int
 getX i w = mod i w
 
 type Position = (Int, Int)
+
 type Tile = String
+
 type Cell = (Position, Tile)
 
-level :: [Cell]
-level = [((getX x side, getY x side) , y) | x <- [0..length purgedLevel] 
-                                           | y <- purgedLevel]
+type Level = [Cell]
+
+level :: Level
+level =
+  [ ((getX x side, getY x side), y)
+  | x <- [0 .. length purgedLevel]
+  | y <- purgedLevel
+  ]
 
 getPosition :: Cell -> Position
 getPosition cell = fst cell
 
-getCellX :: Position -> Int
-getCellX pos = fst pos
+getCellX :: Position -> Integer
+getCellX pos = toInteger(fst pos)
 
-getCellY :: Position -> Int
-getCellY pos = snd pos
+getCellY :: Position -> Integer
+getCellY pos = toInteger(snd pos)
 
 getTile :: Cell -> Tile
 getTile cell = snd cell
 
-flash = "💥"
-
-printable tile | tile == "." = ".."
-                   | tile == "p" = "📷"
-                   | tile == "q" = "📸"
-                   | tile == "x" = "🌲"
-                   | tile == "o" = "🥡"
-                   | otherwise   = "  "
-
-putTile cell | getCellX (getPosition cell) == (side - 1) = (printable $ getTile cell) ++ "\n"
-             | getCellX (getPosition cell) == 2 && getCellY (getPosition cell) == 2 = "👾" 
-             | otherwise = printable $ getTile cell
-
-
--- replace with ncurses method for print
-renderMap l = sequence_ [putStr $ putTile cell | cell <- l]  
-
--- replace with ncurses method for clear
-clearScreen = putStr "\ESC[2J"
-
-updateScreen :: IO ()
-updateScreen = do
-            clearScreen
-            renderMap level
-
-
+printable :: Tile -> String
+printable tile
+  | tile == "." = ".."
+  | tile == "p" = "📷"
+  | tile == "q" = "📷"
+  | tile == "x" = "🌲"
+  | tile == "o" = "🍪"
+  | otherwise   = "  "
 
