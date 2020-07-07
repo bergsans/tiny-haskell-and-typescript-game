@@ -46,55 +46,61 @@ main = do
     w <- defaultWindow
     gameloop w 3 3 0 level cameras
 
+isShot cam x y = (((getCellX $ fst cam) + snd cam), getCellY $ fst cam) == (x, y)
+
 gameloop :: Window -> Integer -> Integer -> Integer -> Level -> Cameras -> Curses ()
 gameloop w x y score l cs = do
-  updateWindow w $ do
-    clear
-    renderMap l
-    renderPlayer x y
-    renderCamerasShooting cs
-    renderScore score
-  render
-  ev <- getEvent w (Just 100)
-  case ev of
-    Nothing -> gameloop w x y score l cameras
-    Just ev'
-      | ev' == EventCharacter 'q' -> return ()
-      | ev' == EventSpecialKey KeyUpArrow && (isMovePossible x y "Up" l) ->
-        gameloop
-          w
-          x
-          (y - 1)
-          (checkScore l x (y - 1) score)
-          (checkLevel l x (y - 1))
-          cameras
-      | ev' == EventSpecialKey KeyRightArrow && (isMovePossible x y "Right" l) ->
-        gameloop
-          w
-          (x + 1)
-          y
-          (checkScore l (x + 1) y score)
-          (checkLevel l (x + 1) y)
-          cameras
-      | ev' == EventSpecialKey KeyDownArrow && (isMovePossible x y "Down" l) ->
-        gameloop
-          w
-          x
-          (y + 1)
-          (checkScore l x (y + 1) score)
-          (checkLevel l x (y + 1))
-          cameras
-      | ev' == EventSpecialKey KeyLeftArrow && (isMovePossible x y "Left" l) ->
-        gameloop
-          w
-          (x - 1)
-          y
-          (checkScore l (x - 1) y score)
-          (checkLevel l (x - 1) y)
-          cameras
-      | otherwise -> gameloop w x y score l cameras
-    where 
-      cameras = moveCameras cs l
+  if score == 13 || any (\c -> isShot c x y) cs
+    then do
+      return ()
+    else do 
+      updateWindow w $ do
+        clear
+        renderMap l
+        renderPlayer x y
+        renderCamerasShooting cs
+        renderScore score
+      render
+      ev <- getEvent w (Just 100)
+      case ev of
+        Nothing -> gameloop w x y score l cameras
+        Just ev'
+          | ev' == EventCharacter 'q' -> return ()
+          | ev' == EventSpecialKey KeyUpArrow && (isMovePossible x y "Up" l) ->
+            gameloop
+              w
+              x
+              (y - 1)
+              (checkScore l x (y - 1) score)
+              (checkLevel l x (y - 1))
+              cameras
+          | ev' == EventSpecialKey KeyRightArrow && (isMovePossible x y "Right" l) ->
+            gameloop
+              w
+              (x + 1)
+              y
+              (checkScore l (x + 1) y score)
+              (checkLevel l (x + 1) y)
+              cameras
+          | ev' == EventSpecialKey KeyDownArrow && (isMovePossible x y "Down" l) ->
+            gameloop
+              w
+              x
+              (y + 1)
+              (checkScore l x (y + 1) score)
+              (checkLevel l x (y + 1))
+              cameras
+          | ev' == EventSpecialKey KeyLeftArrow && (isMovePossible x y "Left" l) ->
+            gameloop
+              w
+              (x - 1)
+              y
+              (checkScore l (x - 1) y score)
+              (checkLevel l (x - 1) y)
+              cameras
+          | otherwise -> gameloop w x y score l cameras
+        where 
+          cameras = moveCameras cs l
 
 
 
