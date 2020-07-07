@@ -9,10 +9,10 @@ module Lib
   , level
   , Cell
   , Level
+  , isMovePossible
   ) where
 
 import Data.List.Split
--- import RawLevel -- contains the level :: String
 
 rawLevel :: String -- raw string representation of level
 rawLevel = "\
@@ -53,7 +53,7 @@ rawLevel = "\
 \wwxxxxx.....q......xxwwwwxx...xxxx.x\n\
 \wwwxxxxxxxxxxxxxxxxxxwwwxxxxxxxwwxxx"
 
-side :: Int -- a side of level
+side :: Integer -- a side of level
 side = 36
 
 splitRawLevel :: String -> [[[Char]]] -- split level-string on ""
@@ -68,13 +68,13 @@ notEmpty x = length x > 0
 purgedLevel :: [String]
 purgedLevel = filter notEmpty $ flatten (splitRawLevel rawLevel)
 
-getY :: Int -> Int -> Int
+getY :: Integer -> Integer -> Integer
 getY i w = div i w
 
-getX :: Int -> Int -> Int
+getX :: Integer -> Integer -> Integer
 getX i w = mod i w
 
-type Position = (Int, Int)
+type Position = (Integer, Integer)
 
 type Tile = String
 
@@ -84,10 +84,18 @@ type Level = [Cell]
 
 level :: Level
 level =
-  [ ((getX x side, getY x side), y)
+  [ ((getX (toInteger x) side, getY (toInteger x) side), y)
   | x <- [0 .. length purgedLevel]
   | y <- purgedLevel
   ]
+
+isMovePossible :: Integer -> Integer-> String -> Level -> Bool
+isMovePossible x y direction l
+  | direction == "Up"    && not $ ((x, (y - 1)), "x") `elem` l = True
+  | direction == "Right" && not $ (((x + 1), y), "x") `elem` l = True
+  | direction == "Down"  && not $ ((x, (y + 1)), "x") `elem` l = True
+  | direction == "Left"  && not $ (((x - 1), y), "x") `elem` l = True
+  | otherwise = False
 
 getPosition :: Cell -> Position
 getPosition cell = fst cell
@@ -101,12 +109,13 @@ getCellY pos = toInteger(snd pos)
 getTile :: Cell -> Tile
 getTile cell = snd cell
 
+  -- | tile == "x" = "🌲"
 printable :: Tile -> String
 printable tile
-  | tile == "." = ".."
+  | tile == "." = "░░"
   | tile == "p" = "📷"
   | tile == "q" = "📷"
-  | tile == "x" = "🌲"
-  | tile == "o" = "🍪"
-  | otherwise   = "  "
+  | tile == "x" = "🧱"
+  | tile == "o" = "🍒"
+  | otherwise   = "░░"
 

@@ -36,7 +36,7 @@ double x = x + x
 
 putTile :: Cell -> Update ()
 putTile cell = do
-  moveCursor (getCellY $ getPosition cell) (double $ getCellX $ getPosition cell)
+  isMovePossibleCursor (getCellY $ getPosition cell) (double $ getCellX $ getPosition cell)
   drawString (printable $ getTile cell)
 
 renderMap :: Level -> Update ()
@@ -44,7 +44,7 @@ renderMap l = sequence_ [putTile cell | cell <- l]
 
 renderPlayer :: Integer -> Integer -> Update()
 renderPlayer x y = do
-  moveCursor y x
+  isMovePossibleCursor y x
   drawString "👾"
 
 main :: IO ()
@@ -66,9 +66,13 @@ gameloop w x y l = do
   case ev of
     Nothing -> gameloop w x y l
     Just ev'
-      | ev' == EventCharacter 'q'            -> return ()
-      | ev' == EventSpecialKey KeyUpArrow    -> gameloop w x (y - 1) l
-      | ev' == EventSpecialKey KeyRightArrow -> gameloop w (x + 1) y l
-      | ev' == EventSpecialKey KeyDownArrow  -> gameloop w x (y + 1) l
-      | ev' == EventSpecialKey KeyLeftArrow  -> gameloop w (x - 1) y l
-      | otherwise                            -> gameloop w x y l
+      | ev' == EventCharacter 'q'                                              -> return ()
+      | ev' == EventSpecialKey KeyUpArrow    && (isMovePossible x y "Up" l)    -> gameloop w x (y - 1) l
+      | ev' == EventSpecialKey KeyRightArrow && (isMovePossible x y "Right" l) -> gameloop w (x + 1) y l
+      | ev' == EventSpecialKey KeyDownArrow  && (isMovePossible x y "Down" l)  -> gameloop w x (y + 1) l
+      | ev' == EventSpecialKey KeyLeftArrow  && (isMovePossible x y "Left" l)  -> gameloop w (x - 1) y l
+      | otherwise                                                              -> gameloop w x y l
+
+
+
+
