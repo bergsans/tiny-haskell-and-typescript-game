@@ -16,7 +16,7 @@ rawLevel = "\
 \x.oxxxxxxxx...............xxx......x\n\
 \x.....xxxxxxx............xxx...o...x\n\
 \xxxx.....xxx.............xxx.......x\n\
-\wwwx............o...q.............xx\n\
+\wwwx............o...c.............xx\n\
 \wxxx................x...........xxxw\n\
 \xx.....xxxx.......xxx.........xxxwww\n\
 \x.o....xxxxxxx.....x.....xxxxxxwwwww\n\
@@ -24,9 +24,9 @@ rawLevel = "\
 \xxx....xxxx......x.......xxxxxxxxwww\n\
 \wwx....xxxxo....xxx............oxxww\n\
 \wxxxx............................xxx\n\
-\xx...........xx..x..........q......x\n\
+\xx...........xx..x..........c......x\n\
 \xxx..o.....xxxxxxxxx........x.....xx\n\
-\xp......xxxxxwwxxx........xxxx...xxx\n\
+\xx......xxxxxwwxxx........xxxx...xxx\n\
 \x..........xxwxxxx.........xxx.....x\n\
 \xxx........xxxxxxxxxx.......x......x\n\
 \xxxxx........x..xxxxx.............xx\n\
@@ -34,12 +34,12 @@ rawLevel = "\
 \wwwwwxx..o....................xxxxxw\n\
 \wwwxxxxx............o.............xx\n\
 \wwwwx.............................xx\n\
-\xxxxxp....xxxx.............xxx...xxx\n\
+\xxxxxc....xxxx.............xxx...xxx\n\
 \x.oxxxx.....x......xxxx.xxxxwxx..xww\n\
 \xx...xx............xwwxxxwwwwx...xxx\n\
 \wx....x............xxwwwwwxxxx.....x\n\
 \wxx.................xxwwwwxo....x..x\n\
-\wwxxxxx.....q......xxwwwwxx...xxxx.x\n\
+\wwxxxxx.....c......xxwwwwxx...xxxx.x\n\
 \wwwxxxxxxxxxxxxxxxxxxwwwxxxxxxxwwxxx"
 
 monsterWantsCookiesLogo = "\

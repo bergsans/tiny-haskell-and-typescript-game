@@ -3,6 +3,7 @@ module Draw (
   , renderMap
   , renderScore
   , nonNCursesClearScreen
+  , renderCamerasShooting
 ) where
 
 import UI.NCurses
@@ -12,12 +13,14 @@ import GameData
 double :: Integer -> Integer
 double x = x + x
 
+camShot = "💥"
+
 printable :: Tile -> String
 printable tile
   | tile == "." = "."
-  | tile == "p" = "c"
-  | tile == "q" = "c"
-  | tile == "x" = "░░"
+  | tile == "c" = "📷"
+  | tile == "x" = "▒▒"
+  -- | tile == "x" = "░░"
   | tile == "o" = "🍪"
   | otherwise   = " "
 
@@ -25,6 +28,12 @@ putTile :: Cell -> Update ()
 putTile cell = do
   moveCursor (getCellY $ getPosition cell) (double $ getCellX $ getPosition cell)
   drawString (printable $ getTile cell)
+
+drawShot c = do
+  moveCursor (getCellY $ fst c) (double $ ((getCellX $ fst c) + (snd c)))
+  drawString camShot
+
+renderCamerasShooting cs = sequence_ [drawShot c | c <- cs]
 
 renderScore :: Integer -> Update()
 renderScore score = do

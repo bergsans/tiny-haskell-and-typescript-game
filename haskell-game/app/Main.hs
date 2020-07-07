@@ -28,46 +28,77 @@
 
 module Main where
 
-import UI.NCurses
 import Control.Concurrent
+import UI.NCurses
 
-import Lib
-import GameData
 import Draw
+import GameData
+import Lib
 
 main :: IO ()
 main = do
   nonNCursesClearScreen
   putStrLn monsterWantsCookiesLogo
-  threadDelay 3000000
-  runCurses $ do 
+  threadDelay 1000000
+  runCurses $ do
     setCursorMode CursorInvisible
     setEcho False
     w <- defaultWindow
-    updateWindow w $ do
-      clear
-      drawString "hello"
-    render
-    gameloop w 3 3 level 0
+    gameloop w 3 3 0 level cameras
 
-gameloop :: Window -> Integer -> Integer -> Level -> Integer -> Curses ()
-gameloop w x y l score = do
+gameloop :: Window -> Integer -> Integer -> Integer -> Level -> Cameras -> Curses ()
+gameloop w x y score l cs = do
   updateWindow w $ do
     clear
     renderMap l
     renderPlayer x y
+    renderCamerasShooting cs
     renderScore score
   render
-  ev <- getEvent w (Just 1000)
+  ev <- getEvent w (Just 100)
   case ev of
-    Nothing -> gameloop w x y l score
+    Nothing -> gameloop w x y score l cameras
     Just ev'
-      | ev' == EventCharacter 'q'                                              -> return ()
-      | ev' == EventSpecialKey KeyUpArrow    && (isMovePossible x y "Up" l)    -> gameloop w x (y - 1) l score
-      | ev' == EventSpecialKey KeyRightArrow && (isMovePossible x y "Right" l) -> gameloop w (x + 1) y l score
-      | ev' == EventSpecialKey KeyDownArrow  && (isMovePossible x y "Down" l)  -> gameloop w x (y + 1) l score
-      | ev' == EventSpecialKey KeyLeftArrow  && (isMovePossible x y "Left" l)  -> gameloop w (x - 1) y l score
-      | otherwise                                                              -> gameloop w x y l score      
+      | ev' == EventCharacter 'q' -> return ()
+      | ev' == EventSpecialKey KeyUpArrow && (isMovePossible x y "Up" l) ->
+        gameloop
+          w
+          x
+          (y - 1)
+          (checkScore l x (y - 1) score)
+          (checkLevel l x (y - 1))
+          cameras
+      | ev' == EventSpecialKey KeyRightArrow && (isMovePossible x y "Right" l) ->
+        gameloop
+          w
+          (x + 1)
+          y
+          (checkScore l (x + 1) y score)
+          (checkLevel l (x + 1) y)
+          cameras
+      | ev' == EventSpecialKey KeyDownArrow && (isMovePossible x y "Down" l) ->
+        gameloop
+          w
+          x
+          (y + 1)
+          (checkScore l x (y + 1) score)
+          (checkLevel l x (y + 1))
+          cameras
+      | ev' == EventSpecialKey KeyLeftArrow && (isMovePossible x y "Left" l) ->
+        gameloop
+          w
+          (x - 1)
+          y
+          (checkScore l (x - 1) y score)
+          (checkLevel l (x - 1) y)
+          cameras
+      | otherwise -> gameloop w x y score l cameras
+    where 
+      cameras = moveCameras cs l
 
 
 
+
+
+
+      
