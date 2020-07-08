@@ -46,11 +46,9 @@ main = do
     w <- defaultWindow
     gameloop w 3 3 0 level cameras
 
-isShot cam x y = (((getCellX $ fst cam) + snd cam), getCellY $ fst cam) == (x, y)
-
 gameloop :: Window -> Integer -> Integer -> Integer -> Level -> Cameras -> Curses ()
 gameloop w x y score l cs = do
-  if score == 13 || any (\c -> isShot c x y) cs
+  if score == 13 || any (\c -> isPlayerHit c x y) cs
     then do
       return ()
     else do 
@@ -103,8 +101,3 @@ gameloop w x y score l cs = do
           cameras = moveCameras cs l
 
 
-
-
-
-
-      
