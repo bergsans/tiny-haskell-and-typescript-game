@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build":"tsc -p tsconfig.json",
+    "exec" : "npm run build && node build/ts-game.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
