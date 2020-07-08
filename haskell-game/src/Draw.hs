@@ -26,18 +26,18 @@ printable tile
 
 putTile :: Cell -> Update ()
 putTile cell = do
-  moveCursor (getCellY $ getPosition cell) (double $ getCellX $ getPosition cell)
+  moveCursor (2 + (getCellY $ getPosition cell)) (double $ getCellX $ getPosition cell)
   drawString (printable $ getTile cell)
 
 drawShot c = do
-  moveCursor (getCellY $ fst c) (double $ ((getCellX $ fst c) + (snd c)))
+  moveCursor (2 + (getCellY $ fst c)) (double $ ((getCellX $ fst c) + (snd c)))
   drawString camShot
 
 renderCamerasShooting cs = sequence_ [drawShot c | c <- cs]
 
 renderScore :: Integer -> Update()
 renderScore score = do
-  moveCursor 38 1
+  moveCursor 40 1
   drawString $ "Eaten cookies: " ++ (show score)
 
 renderMap :: Level -> Update ()
@@ -45,7 +45,7 @@ renderMap l = sequence_ [putTile cell | cell <- l]
 
 renderPlayer :: Integer -> Integer -> Update()
 renderPlayer x y = do
-  moveCursor y (double x)
+  moveCursor (y + 2) (double x)
   drawString "👾"
 
 nonNCursesClearScreen = putStr "\ESC[2J"
