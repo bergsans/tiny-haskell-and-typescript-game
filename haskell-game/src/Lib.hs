@@ -15,6 +15,7 @@ module Lib
   , cameras
   , moveCameras
   , getCameraDiff
+  , Camera
   , Cameras
   , isPlayerHit
   ) where
