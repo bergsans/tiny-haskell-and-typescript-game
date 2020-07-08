@@ -1,3 +1,4 @@
 import { getLevel } from './game-data.ts';
+import { drawLevel } from './draw.ts';
 
-console.log(getLevel());
+drawLevel(getLevel());
