@@ -1,28 +1,6 @@
-```
-  ███    ███  ██████  ███    ██ ███████ ████████ ███████ ██████  
-  ████  ████ ██    ██ ████   ██ ██         ██    ██      ██   ██ 
-  ██ ████ ██ ██    ██ ██ ██  ██ ███████    ██    █████   ██████  
-  ██  ██  ██ ██    ██ ██  ██ ██      ██    ██    ██      ██   ██ 
-  ██      ██  ██████  ██   ████ ███████    ██    ███████ ██   ██ 
-                                                                 
-                                                                 
-  ██     ██  █████  ███    ██ ████████ ███████                   
-  ██     ██ ██   ██ ████   ██    ██    ██                        
-  ██  █  ██ ███████ ██ ██  ██    ██    ███████                   
-  ██ ███ ██ ██   ██ ██  ██ ██    ██         ██                   
-   ███ ███  ██   ██ ██   ████    ██    ███████                   
-                                                                 
-                                                                 
-   ██████  ██████   ██████  ██   ██ ██ ███████ ███████           
-  ██      ██    ██ ██    ██ ██  ██  ██ ██      ██                
-  ██      ██    ██ ██    ██ █████   ██ █████   ███████           
-  ██      ██    ██ ██    ██ ██  ██  ██ ██           ██           
-   ██████  ██████   ██████  ██   ██ ██ ███████ ███████           
+# MONSTER WANTS COOKIES. A Tiny Haskell Game
 
-
-  - A Tiny Haskell Game (learning project).
-    By Claes-Magnus Berg <claes-magnus@herebeseaswines.net>
-```
+A Haskell learning project. I wanted to learn about handling side-effects in Haskell. A game-ish demo seemed like a suitable project.
 
 ![](screenshot.gif)
 
