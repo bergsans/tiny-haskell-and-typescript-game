@@ -1,4 +1,20 @@
-import { getLevel } from './game-data.ts';
-import { drawLevel } from './draw.ts';
+import { getLevel, Level } from './game-data.ts';
+import { drawState } from './draw.ts';
 
-drawLevel(getLevel());
+export interface Position {
+  x: number;
+  y: number;
+}
+
+export interface State {
+  level: Level;
+  plr: Position; 
+}
+
+drawState({
+  level: getLevel(),
+  plr: {
+    x: 2,
+    y: 2
+  }
+});

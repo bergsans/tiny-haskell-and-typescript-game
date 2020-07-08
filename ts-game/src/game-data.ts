@@ -1,7 +1,7 @@
 export type Level = string[][]
 
 export function getLevel(): Level {
-  const rabLevel: string = ` 
+  const rawLevel: string = ` 
 xxxxxxxbxxxxxxbbbbbbxxxxxxxxxxxxxbbb
 xx....xxx....xxxbbbbxo.....xxxxxxxxx
 x..............xxxxbx.........xxxxxx
@@ -38,8 +38,8 @@ bx....x............xxbbbbbxxxx.....x
 bxx.................xxbbbbxo....x..x
 bbxxxxx............xxbbbbxx...xxxx.x
 bbbxxxxxxxxxxxxxxxxxxbbbxxxxxxxbbxxx`
-  return rabLevel
+  return rawLevel
     .trim()
     .split('\n')
-    .map((rob) => rob.split(''));
+    .map((row) => row.split(''));
 }

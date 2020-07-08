@@ -1,4 +1,4 @@
-import { Level } from './game-data.ts';
+import { State } from './ts-game.ts';
 
 interface TileTypes {
   c: string;
@@ -17,11 +17,17 @@ const tileTypes:TileTypes = {
   'b': '  '
 }
 
-export function drawLevel(level: Level) {
+export function drawState(state:State) {
   console.log(
-    level
-      .map((row: string[]) => row
-          .map((tile: string) => tileTypes[tile as keyof TileType])
+    state.level
+      .map((row: string[], y: number) => row
+          .map((tile: string, x: number) => {
+            if(state.plr.x === x && state.plr.y === y) {
+              return "👾";
+            } else {
+              return tileTypes[tile as keyof TileType];
+            }
+          })
           .join(''))
       .join('\n')
   );
