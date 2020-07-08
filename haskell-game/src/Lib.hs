@@ -17,7 +17,7 @@ module Lib
   , getCameraDiff
   , Camera
   , Cameras
-  , isPlayerHit
+  , isAnyCameraHittingPlayer
   ) where
 
 import Data.List.Split
@@ -96,10 +96,6 @@ getCameras l = map createCameraProps $ filter isCamera l
 getCameraDiff :: Camera -> Integer -- get temp x diff of a camera
 getCameraDiff camera = snd camera
 
-isPlayerHit :: Camera -> Integer -> Integer -> Bool -- is player hit?
-isPlayerHit cam x y =
-  (((getCellX $ fst cam) + snd cam), getCellY $ fst cam) == (x, y)
-
 camMove :: Camera -> Level -> Camera -- move a camera x diff (if wall, restart)
 camMove camera l =
   if ( ( ((getCellX $ fst camera) + (getCameraDiff camera) + 1)
@@ -109,6 +105,13 @@ camMove camera l =
     then ( ((getCellX $ fst camera), (getCellY $ fst camera))
          , ((getCameraDiff camera) + 1))
     else (((getCellX $ fst camera), (getCellY $ fst camera)), 1)
+
+isPlayerHit :: Camera -> Integer -> Integer -> Bool -- is player hit by a camera?
+isPlayerHit cam x y =
+  (((getCellX $ fst cam) + snd cam), getCellY $ fst cam) == (x, y)
+
+isAnyCameraHittingPlayer :: Cameras -> Integer -> Integer -> Bool -- is any cam hitting plr?
+isAnyCameraHittingPlayer cams x y = any (\c -> isPlayerHit c x y) cas
 
 moveCameras :: Cameras -> Level -> Cameras -- move cameras "shots"
 moveCameras cs l = map (\c -> camMove c l) cs

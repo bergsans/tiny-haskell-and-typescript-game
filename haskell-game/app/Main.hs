@@ -48,7 +48,7 @@ main = do
 
 gameloop :: Window -> Integer -> Integer -> Integer -> Level -> Cameras -> Curses ()
 gameloop w x y score l cs = do
-  if score == 13 || any (\c -> isPlayerHit c x y) cs
+  if score == 13 || isAnyCameraHittingPlayer cs x y
     then do
       return ()
     else do 
@@ -99,5 +99,4 @@ gameloop w x y score l cs = do
           | otherwise -> gameloop w x y score l cameras
         where 
           cameras = moveCameras cs l
-
 
