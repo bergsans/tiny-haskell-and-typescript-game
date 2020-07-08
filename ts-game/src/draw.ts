@@ -1,4 +1,4 @@
-import { State } from './ts-game.ts';
+import { State } from './ts-game';
 
 interface TileTypes {
   c: string;

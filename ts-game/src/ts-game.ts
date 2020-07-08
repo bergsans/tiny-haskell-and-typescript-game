@@ -1,5 +1,5 @@
-import { getLevel, Level } from './game-data.ts';
-import { drawState } from './draw.ts';
+import { getLevel, Level } from './game-data';
+import { drawState } from './draw';
 
 export interface Position {
   x: number;
