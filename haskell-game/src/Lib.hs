@@ -36,7 +36,7 @@ notEmpty :: [a] -> Bool -- used for filtering out empty items in "map" list
 notEmpty x = length x > 0
 
 purgedLevel :: [String] -- splits "map" list to list of string containing tile
-purgedLevel = filter notEmpty $ flatten (splitRawLevel rawLevel)
+purgedLevel = filter notEmpty $ flatten $ splitRawLevel rawLevel
 
 getY :: Integer -> Integer -> Integer -- get y position on level in list
 getY i w = div i w
@@ -71,17 +71,16 @@ getPosition :: Cell -> Position -- get Position of a Cell
 getPosition cell = fst cell
 
 getCellX :: Position -> Integer -- get x from Position of a Cell
-getCellX pos = toInteger (fst pos)
+getCellX pos = toInteger $ fst pos
 
 getCellY :: Position -> Integer -- get y from Position of a Cell
-getCellY pos = toInteger (snd pos)
+getCellY pos = toInteger $ snd pos
 
 getTile :: Cell -> Tile -- get tile from a Cell
 getTile cell = snd cell
 
-
 isCamera :: Cell -> Bool -- is cell a camera?
-isCamera cell = (getTile cell) == "c"
+isCamera cell = getTile cell == "c"
 
 createCameraProps :: Cell -> Camera -- creates a camera holding a Position and x diff
 createCameraProps cell = ((getPosition cell), 1)
@@ -111,7 +110,7 @@ isPlayerHit cam x y =
   (((getCellX $ fst cam) + snd cam), getCellY $ fst cam) == (x, y)
 
 isAnyCameraHittingPlayer :: Cameras -> Integer -> Integer -> Bool -- is any cam hitting plr?
-isAnyCameraHittingPlayer cams x y = any (\c -> isPlayerHit c x y) cas
+isAnyCameraHittingPlayer cams x y = any (\c -> isPlayerHit c x y) cams
 
 moveCameras :: Cameras -> Level -> Cameras -- move cameras "shots"
 moveCameras cs l = map (\c -> camMove c l) cs
@@ -123,19 +122,20 @@ isNotASpecificCell :: Cell -> Cell -> Bool -- used for filtering out a Cell from
 isNotASpecificCell cell1 cell2 = cell1 /= cell2
 
 removeCherry :: Cell -> Level -> Integer -> Integer -> Level -- remove a cherry Cell from Level
-removeCherry oldCell l x y = (filter (isNotASpecificCell oldCell) l) ++ [((x, y), ".")]
+removeCherry oldCell l x y =
+  filter (isNotASpecificCell oldCell) l ++ [((x, y), ".")]
 
 isCherry :: Integer -> Integer -> Level -> Bool -- is player position at a cherry Cell?
 isCherry x y l = ((x, y), "o") `elem` l
 
 checkScore :: Level -> Integer -> Integer -> Integer -> Integer -- if on cherry Cell, inc score
 checkScore l x y score =
-  if (isCherry x y l)
-    then (score + 1)
+  if isCherry x y l
+    then score + 1
     else score
 
 checkLevel :: Level -> Integer -> Integer -> Level -- if on cherry cell, replace cell with floor
 checkLevel l x y =
-  if (isCherry x y l)
-    then (removeCherry ((x, y), "o") l x y)
+  if isCherry x y l
+    then removeCherry ((x, y), "o") l x y
     else l
