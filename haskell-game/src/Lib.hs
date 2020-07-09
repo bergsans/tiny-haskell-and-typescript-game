@@ -23,25 +23,32 @@ module Lib
 import Data.List.Split
 import GameData
 
-side :: Integer -- a side of level
+-- a side of level
+side :: Integer
 side = 36
 
-splitRawLevel :: String -> [[[Char]]] -- split level-string on ""
+-- split level-string on ""
+splitRawLevel :: String -> [[[Char]]] 
 splitRawLevel l = map (splitOn "") (lines l)
 
+-- flatten a list one level
 flatten :: [[a]] -> [a]
 flatten = foldl (++) []
 
-notEmpty :: [a] -> Bool -- used for filtering out empty items in "map" list
+-- used for filtering out empty items in "map" list
+notEmpty :: [a] -> Bool
 notEmpty x = length x > 0
 
-purgedLevel :: [String] -- splits "map" list to list of string containing tile
+-- splits "map" list to list of string containing tile
+purgedLevel :: [String]
 purgedLevel = filter notEmpty $ flatten $ splitRawLevel rawLevel
 
-getY :: Integer -> Integer -> Integer -- get y position on level in list
+-- get y position on level in list
+getY :: Integer -> Integer -> Integer
 getY i w = div i w
 
-getX :: Integer -> Integer -> Integer -- get x position on level in list
+-- get x position on level in list
+getX :: Integer -> Integer -> Integer
 getX i w = mod i w
 
 type Position = (Integer, Integer)
@@ -52,14 +59,16 @@ type Cell = (Position, Tile)
 
 type Level = [Cell]
 
-level :: Level -- creates a level 
+-- creates a level 
+level :: Level
 level =
   [ ((getX (toInteger x) side, getY (toInteger x) side), y)
   | x <- [0 .. length purgedLevel]
   | y <- purgedLevel
   ]
 
-isMovePossible :: Integer -> Integer -> String -> Level -> Bool -- can player move to cell
+-- can player move to cell
+isMovePossible :: Integer -> Integer -> String -> Level -> Bool
 isMovePossible x y direction l
   | direction == "Up" && not (((x, (y - 1)), "x") `elem` l) = True
   | direction == "Right" && not ((((x + 1), y), "x") `elem` l) = True
@@ -67,35 +76,44 @@ isMovePossible x y direction l
   | direction == "Left" && not ((((x - 1), y), "x") `elem` l) = True
   | otherwise = False
 
-getPosition :: Cell -> Position -- get Position of a Cell
+-- get Position of a Cell
+getPosition :: Cell -> Position
 getPosition cell = fst cell
 
-getCellX :: Position -> Integer -- get x from Position of a Cell
+-- get x from Position of a Cell
+getCellX :: Position -> Integer
 getCellX pos = toInteger $ fst pos
 
-getCellY :: Position -> Integer -- get y from Position of a Cell
+-- get y from Position of a Cell
+getCellY :: Position -> Integer
 getCellY pos = toInteger $ snd pos
 
-getTile :: Cell -> Tile -- get tile from a Cell
+-- get tile from a Cell
+getTile :: Cell -> Tile
 getTile cell = snd cell
 
-isCamera :: Cell -> Bool -- is cell a camera?
+-- is cell a camera?
+isCamera :: Cell -> Bool
 isCamera cell = getTile cell == "c"
 
-createCameraProps :: Cell -> Camera -- creates a camera holding a Position and x diff
+-- creates a camera holding a Position and x diff
+createCameraProps :: Cell -> Camera
 createCameraProps cell = ((getPosition cell), 1)
 
 type Camera = (Position, Integer)
 
 type Cameras = [Camera]
 
-getCameras :: Level -> Cameras -- find cameras on level and create Cameras
+-- find cameras on level and create Cameras
+getCameras :: Level -> Cameras
 getCameras l = map createCameraProps $ filter isCamera l
 
-getCameraDiff :: Camera -> Integer -- get temp x diff of a camera
+-- get temp x diff of a camera
+getCameraDiff :: Camera -> Integer
 getCameraDiff camera = snd camera
 
-camMove :: Camera -> Level -> Camera -- move a camera x diff (if wall, restart)
+-- move a camera x diff (if wall, restart)
+camMove :: Camera -> Level -> Camera
 camMove camera l =
   if ( ( ((getCellX $ fst camera) + (getCameraDiff camera) + 1)
        , (getCellY $ fst camera))
@@ -105,36 +123,44 @@ camMove camera l =
          , ((getCameraDiff camera) + 1))
     else (((getCellX $ fst camera), (getCellY $ fst camera)), 1)
 
-isPlayerHit :: Camera -> Integer -> Integer -> Bool -- is player hit by a camera?
+-- is player hit by a camera?
+isPlayerHit :: Camera -> Integer -> Integer -> Bool
 isPlayerHit cam x y =
   (((getCellX $ fst cam) + snd cam), getCellY $ fst cam) == (x, y)
 
-isAnyCameraHittingPlayer :: Cameras -> Integer -> Integer -> Bool -- is any cam hitting plr?
+-- is any cam hitting plr?
+isAnyCameraHittingPlayer :: Cameras -> Integer -> Integer -> Bool
 isAnyCameraHittingPlayer cams x y = any (\c -> isPlayerHit c x y) cams
 
-moveCameras :: Cameras -> Level -> Cameras -- move cameras "shots"
+-- move cameras "shots"
+moveCameras :: Cameras -> Level -> Cameras
 moveCameras cs l = map (\c -> camMove c l) cs
 
 cameras :: Cameras
 cameras = getCameras level
 
-isNotASpecificCell :: Cell -> Cell -> Bool -- used for filtering out a Cell from Level 
+-- used for filtering out a Cell from Level 
+isNotASpecificCell :: Cell -> Cell -> Bool
 isNotASpecificCell cell1 cell2 = cell1 /= cell2
 
-removeCherry :: Cell -> Level -> Integer -> Integer -> Level -- remove a cherry Cell from Level
+-- remove a cherry Cell from Level
+removeCherry :: Cell -> Level -> Integer -> Integer -> Level
 removeCherry oldCell l x y =
   filter (isNotASpecificCell oldCell) l ++ [((x, y), ".")]
 
-isCherry :: Integer -> Integer -> Level -> Bool -- is player position at a cherry Cell?
+-- is player position at a cherry Cell?
+isCherry :: Integer -> Integer -> Level -> Bool
 isCherry x y l = ((x, y), "o") `elem` l
 
-checkScore :: Level -> Integer -> Integer -> Integer -> Integer -- if on cherry Cell, inc score
+-- if on cherry Cell, inc score
+checkScore :: Level -> Integer -> Integer -> Integer -> Integer
 checkScore l x y score =
   if isCherry x y l
     then score + 1
     else score
 
-checkLevel :: Level -> Integer -> Integer -> Level -- if on cherry cell, replace cell with floor
+-- if on cherry cell, replace cell with floor
+checkLevel :: Level -> Integer -> Integer -> Level
 checkLevel l x y =
   if isCherry x y l
     then removeCherry ((x, y), "o") l x y
