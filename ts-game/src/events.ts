@@ -23,7 +23,7 @@ export interface EventHandler {
 export const eventHandler = () => {
   const events: UserEvent = { ...defaultEventState() };
   const handleKeyEvent = (_: string, key: any) => {
-    if(key === 'q') {
+    if(key.name === 'q') {
       process.exit(0);
     } else if(commands.includes(key.name)) {
       Object.assign(
