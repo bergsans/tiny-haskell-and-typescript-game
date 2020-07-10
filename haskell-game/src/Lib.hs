@@ -20,15 +20,15 @@ module Lib
   , isAnyCameraHittingPlayer
   ) where
 
-import Data.List.Split
-import GameData
+import           Data.List.Split
+import           GameData
 
 -- a side of level
 side :: Integer
 side = 36
 
 -- split level-string on ""
-splitRawLevel :: String -> [[[Char]]] 
+splitRawLevel :: String -> [[[Char]]]
 splitRawLevel l = map (splitOn "") (lines l)
 
 -- flatten a list one level
@@ -59,7 +59,7 @@ type Cell = (Position, Tile)
 
 type Level = [Cell]
 
--- creates a level 
+-- creates a level
 level :: Level
 level =
   [ ((getX (toInteger x) side, getY (toInteger x) side), y)
@@ -139,7 +139,7 @@ moveCameras cs l = map (\c -> camMove c l) cs
 cameras :: Cameras
 cameras = getCameras level
 
--- used for filtering out a Cell from Level 
+-- used for filtering out a Cell from Level
 isNotASpecificCell :: Cell -> Cell -> Bool
 isNotASpecificCell cell1 cell2 = cell1 /= cell2
 

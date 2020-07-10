@@ -6,9 +6,9 @@ module Draw (
   , renderCamerasShooting
 ) where
 
-import UI.NCurses
-import Lib
-import GameData
+import           GameData
+import           Lib
+import           UI.NCurses
 
 double :: Integer -> Integer
 double x = x + x
@@ -25,7 +25,7 @@ printable tile
   | tile == "o" = "🍪"
   | otherwise   = " "
 
--- Put a Tile at a screen position 
+-- Put a Tile at a screen position
 putTile :: Cell -> Update ()
 putTile cell = do
   moveCursor (2 + (getCellY $ getPosition cell)) (double $ getCellX $ getPosition cell)
@@ -57,4 +57,4 @@ renderPlayer x y = do
   drawString "👾"
 
 -- Clears screen using ANSI (outside ncurses)
-nonNCursesClearScreen = putStr "\ESC[2J" 
+nonNCursesClearScreen = putStr "\ESC[2J"
