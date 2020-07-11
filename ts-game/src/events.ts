@@ -8,7 +8,7 @@ const defaultEventState = () => ({
   up: false,
   down: false,
   right: false,
-  left: false
+  left: false,
 });
 
 type Direction = keyof Directions<boolean>;
@@ -23,9 +23,9 @@ export interface EventHandler {
 export const eventHandler = () => {
   const events: UserEvent = { ...defaultEventState() };
   const handleKeyEvent = (_: string, key: any) => {
-    if(key.name === 'q') {
+    if (key.name === 'q') {
       process.exit(0);
-    } else if(commands.includes(key.name)) {
+    } else if (commands.includes(key.name)) {
       Object.assign(
         events,
         { ...defaultEventState() },
@@ -41,9 +41,10 @@ export const eventHandler = () => {
     reset: () => Object.assign(events, defaultEventState()),
     getMoveDirection: () => {
       const dirs: [string, boolean][] = Object.entries(events);
-      const res: [string, boolean] | undefined = dirs.find((v: [string, boolean]) => v[1] === true);;
+      const res: [string, boolean] | undefined = dirs.find(
+        (v: [string, boolean]) => v[1] === true,
+      );
       return res !== undefined ? res[0] : false;
-    }
+    },
   };
 };
-

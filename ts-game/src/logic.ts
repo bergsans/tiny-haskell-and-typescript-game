@@ -33,13 +33,6 @@ const isMovePossible = (
   y: number,
 ) => level[creature.y + y][creature.x + x] === '.';
 
-// const isMovingInDirection = (direction: boolean) => direction === true;
-// 
-// const isPlayerAttemptingToMove = (e: UserEvent): boolean => {
-//   const tValues: boolean[] = Object.values(e);
-//   return tValues.some((v: boolean) => isMovingInDirection(v));
-// };
-
 const attemptMove = (state: State, level: Level, [x, y]: Diff) => (
   isMovePossible(state.plr, level, x, y)
     ? ({
@@ -52,12 +45,14 @@ const attemptMove = (state: State, level: Level, [x, y]: Diff) => (
 
 export const nextState = (state: State, e: EventHandler) => {
   const isPlrMoving = e.getMoveDirection();
-  if (isPlrMoving === false) {
-    return state;
-  }
-  const plr: Position = attemptMove(state, state.level, moveDirs[(isPlrMoving as keyof Directions<Diff>)]);
+  const plr: Position = isPlrMoving
+    ? attemptMove(
+      state, state.level,
+      moveDirs[(isPlrMoving as keyof Directions<Diff>)],
+    )
+    : state.plr;
   return {
     ...state,
-    plr
+    plr,
   };
 };

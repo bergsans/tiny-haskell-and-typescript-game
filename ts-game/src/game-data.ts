@@ -37,7 +37,7 @@ xx...xx............xbbxxxbbbbx...xxx
 bx....x............xxbbbbbxxxx.....x
 bxx.................xxbbbbxo....x..x
 bbxxxxx............xxbbbbxx...xxxx.x
-bbbxxxxxxxxxxxxxxxxxxbbbxxxxxxxbbxxx`
+bbbxxxxxxxxxxxxxxxxxxbbbxxxxxxxbbxxx`;
   return rawLevel
     .trim()
     .split('\n')

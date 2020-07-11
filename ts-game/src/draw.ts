@@ -14,22 +14,17 @@ const tileTypes:TileTypes = {
   x: '▒▒',
   o: '🍪',
   '.': ' .',
-  'b': '  '
-}
+  b: '  ',
+};
 
-export function drawState(state:State) {
+export default function drawState(state: State) {
   console.log(
     state.level
       .map((row: string[], y: number) => row
-          .map((tile: string, x: number) => {
-            if(state.plr.x === x && state.plr.y === y) {
-              return "👾";
-            } else {
-              return tileTypes[tile as keyof TileType];
-            }
-          })
-          .join(''))
-      .join('\n')
+        .map((tile: string, x: number) => (state.plr.x === x && state.plr.y === y
+          ? '👾'
+          : tileTypes[tile as keyof TileType]))
+        .join(''))
+      .join('\n'),
   );
 }
-
