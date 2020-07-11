@@ -48,7 +48,7 @@ renderCamerasShooting cs = sequence_ [drawShot c | c <- cs]
 renderScore :: Integer -> Update()
 renderScore score = do
   moveCursor 40 1
-  drawString $ "Eaten cookies: " ++ (show score)
+  drawString $ "Eaten cookies: " ++ show score
 
 -- Puts player on Screen
 renderPlayer :: Integer -> Integer -> Update()

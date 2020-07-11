@@ -28,7 +28,7 @@ side :: Integer
 side = 36
 
 -- split level-string on ""
-splitRawLevel :: String -> [[[Char]]]
+splitRawLevel :: String -> [[String]]
 splitRawLevel l = map (splitOn "") (lines l)
 
 -- flatten a list one level
@@ -45,11 +45,11 @@ purgedLevel = filter notEmpty $ flatten $ splitRawLevel rawLevel
 
 -- get y position on level in list
 getY :: Integer -> Integer -> Integer
-getY i w = div i w
+getY = div
 
 -- get x position on level in list
 getX :: Integer -> Integer -> Integer
-getX i w = mod i w
+getX = mod
 
 type Position = (Integer, Integer)
 
@@ -78,7 +78,7 @@ isMovePossible x y direction l
 
 -- get Position of a Cell
 getPosition :: Cell -> Position
-getPosition cell = fst cell
+getPosition = fst
 
 -- get x from Position of a Cell
 getCellX :: Position -> Integer
@@ -90,7 +90,7 @@ getCellY pos = toInteger $ snd pos
 
 -- get tile from a Cell
 getTile :: Cell -> Tile
-getTile cell = snd cell
+getTile = snd
 
 -- is cell a camera?
 isCamera :: Cell -> Bool
@@ -98,7 +98,7 @@ isCamera cell = getTile cell == "c"
 
 -- creates a camera holding a Position and x diff
 createCameraProps :: Cell -> Camera
-createCameraProps cell = ((getPosition cell), 1)
+createCameraProps cell = (getPosition cell, 1)
 
 type Camera = (Position, Integer)
 
@@ -110,7 +110,7 @@ getCameras l = map createCameraProps $ filter isCamera l
 
 -- get temp x diff of a camera
 getCameraDiff :: Camera -> Integer
-getCameraDiff camera = snd camera
+getCameraDiff = snd
 
 -- move a camera x diff (if wall, restart)
 camMove :: Camera -> Level -> Camera
@@ -134,7 +134,7 @@ isAnyCameraHittingPlayer cams x y = any (\c -> isPlayerHit c x y) cams
 
 -- move cameras "shots"
 moveCameras :: Cameras -> Level -> Cameras
-moveCameras cs l = map (\c -> camMove c l) cs
+moveCameras cs l = map (`camMove` l) cs
 
 cameras :: Cameras
 cameras = getCameras level

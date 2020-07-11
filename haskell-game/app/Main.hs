@@ -24,7 +24,6 @@
 --
 ----------------------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------------------
-{-# LANGUAGE ParallelListComp #-}
 
 module Main where
 
@@ -47,10 +46,9 @@ main = do
     gameloop w 3 3 0 level cameras
 
 gameloop :: Window -> Integer -> Integer -> Integer -> Level -> Cameras -> Curses ()
-gameloop w x y score l cs = do
+gameloop w x y score l cs = 
   if score == 13 || isAnyCameraHittingPlayer cs x y
-    then do
-      return ()
+    then return ()
     else do
       updateWindow w $ do
         clear
@@ -64,7 +62,7 @@ gameloop w x y score l cs = do
         Nothing -> gameloop w x y score l cameras
         Just ev'
           | ev' == EventCharacter 'q' -> return ()
-          | ev' == EventSpecialKey KeyUpArrow && (isMovePossible x y "Up" l) ->
+          | ev' == EventSpecialKey KeyUpArrow && isMovePossible x y "Up" l ->
             gameloop
               w
               x
@@ -72,7 +70,7 @@ gameloop w x y score l cs = do
               (checkScore l x (y - 1) score)
               (checkLevel l x (y - 1))
               cameras
-          | ev' == EventSpecialKey KeyRightArrow && (isMovePossible x y "Right" l) ->
+          | ev' == EventSpecialKey KeyRightArrow && isMovePossible x y "Right" l ->
             gameloop
               w
               (x + 1)
@@ -80,7 +78,7 @@ gameloop w x y score l cs = do
               (checkScore l (x + 1) y score)
               (checkLevel l (x + 1) y)
               cameras
-          | ev' == EventSpecialKey KeyDownArrow && (isMovePossible x y "Down" l) ->
+          | ev' == EventSpecialKey KeyDownArrow && isMovePossible x y "Down" l ->
             gameloop
               w
               x
@@ -88,7 +86,7 @@ gameloop w x y score l cs = do
               (checkScore l x (y + 1) score)
               (checkLevel l x (y + 1))
               cameras
-          | ev' == EventSpecialKey KeyLeftArrow && (isMovePossible x y "Left" l) ->
+          | ev' == EventSpecialKey KeyLeftArrow && isMovePossible x y "Left" l ->
             gameloop
               w
               (x - 1)
