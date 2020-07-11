@@ -1,7 +1,7 @@
 {-# LANGUAGE ParallelListComp #-}
 
 module Lib
-  ( getPosition
+  ( getPos
   , getCellX
   , getCellY
   , getTile
@@ -13,11 +13,11 @@ module Lib
   , checkLevel
   , checkScore
   , cameras
-  , moveCameras
-  , getCameraDiff
+  , moveCams
+  , getCamDiff
   , Camera
   , Cameras
-  , isAnyCameraHittingPlayer
+  , isAnyCamAtPlr
   ) where
 
 import           Data.List.Split
@@ -37,7 +37,7 @@ flatten = foldl (++) []
 
 -- used for filtering out empty items in "map" list
 notEmpty :: [a] -> Bool
-notEmpty x = length x > 0
+notEmpty x = not (null x)
 
 -- splits "map" list to list of string containing tile
 purgedLevel :: [String]
@@ -70,15 +70,15 @@ level =
 -- can player move to cell
 isMovePossible :: Integer -> Integer -> String -> Level -> Bool
 isMovePossible x y direction l
-  | direction == "Up" && not (((x, (y - 1)), "x") `elem` l) = True
-  | direction == "Right" && not ((((x + 1), y), "x") `elem` l) = True
-  | direction == "Down" && not (((x, (y + 1)), "x") `elem` l) = True
-  | direction == "Left" && not ((((x - 1), y), "x") `elem` l) = True
+  | direction == "Up"    && notElem ((x, y - 1), "x") l = True
+  | direction == "Right" && notElem ((x + 1, y), "x") l = True
+  | direction == "Down"  && notElem ((x, y + 1), "x") l = True
+  | direction == "Left"  && notElem ((x - 1, y), "x") l = True
   | otherwise = False
 
 -- get Position of a Cell
-getPosition :: Cell -> Position
-getPosition = fst
+getPos :: Cell -> Position
+getPos = fst
 
 -- get x from Position of a Cell
 getCellX :: Position -> Integer
@@ -97,56 +97,54 @@ isCamera :: Cell -> Bool
 isCamera cell = getTile cell == "c"
 
 -- creates a camera holding a Position and x diff
-createCameraProps :: Cell -> Camera
-createCameraProps cell = (getPosition cell, 1)
+createCamProps :: Cell -> Camera
+createCamProps cell = (getPos cell, 1)
 
 type Camera = (Position, Integer)
 
 type Cameras = [Camera]
 
 -- find cameras on level and create Cameras
-getCameras :: Level -> Cameras
-getCameras l = map createCameraProps $ filter isCamera l
+getCams :: Level -> Cameras
+getCams l = map createCamProps $ filter isCamera l
 
 -- get temp x diff of a camera
-getCameraDiff :: Camera -> Integer
-getCameraDiff = snd
+getCamDiff :: Camera -> Integer
+getCamDiff = snd
 
 -- move a camera x diff (if wall, restart)
 camMove :: Camera -> Level -> Camera
-camMove camera l =
-  if ( ( ((getCellX $ fst camera) + (getCameraDiff camera) + 1)
-       , (getCellY $ fst camera))
-     , ".") `elem`
-     l
-    then ( ((getCellX $ fst camera), (getCellY $ fst camera))
-         , ((getCameraDiff camera) + 1))
-    else (((getCellX $ fst camera), (getCellY $ fst camera)), 1)
+camMove cam l =
+  if ((getCellX (fst cam) + getCamDiff cam + 1, getCellY $ fst cam)
+     , ".") `elem` l
+    then ( (getCellX $ fst cam, getCellY $ fst cam)
+         , getCamDiff cam + 1)
+    else ((getCellX $ fst cam, getCellY $ fst cam), 1)
 
 -- is player hit by a camera?
-isPlayerHit :: Camera -> Integer -> Integer -> Bool
-isPlayerHit cam x y =
-  (((getCellX $ fst cam) + snd cam), getCellY $ fst cam) == (x, y)
+isPlrHit :: Camera -> (Integer, Integer) -> Bool
+isPlrHit cam (x, y) =
+  (getCellX (fst cam) + snd cam, getCellY $ fst cam) == (x, y)
 
 -- is any cam hitting plr?
-isAnyCameraHittingPlayer :: Cameras -> Integer -> Integer -> Bool
-isAnyCameraHittingPlayer cams x y = any (\c -> isPlayerHit c x y) cams
+isAnyCamAtPlr :: Cameras -> Integer -> Integer -> Bool
+isAnyCamAtPlr cams x y = any (`isPlrHit` (x, y)) cams
 
 -- move cameras "shots"
-moveCameras :: Cameras -> Level -> Cameras
-moveCameras cs l = map (`camMove` l) cs
+moveCams :: Cameras -> Level -> Cameras
+moveCams cs l = map (`camMove` l) cs
 
 cameras :: Cameras
-cameras = getCameras level
+cameras = getCams level
 
 -- used for filtering out a Cell from Level
-isNotASpecificCell :: Cell -> Cell -> Bool
-isNotASpecificCell cell1 cell2 = cell1 /= cell2
+isNotSpecCell :: Cell -> Cell -> Bool
+isNotSpecCell c1 c2 = c1 /= c2
 
 -- remove a cherry Cell from Level
 removeCherry :: Cell -> Level -> Integer -> Integer -> Level
 removeCherry oldCell l x y =
-  filter (isNotASpecificCell oldCell) l ++ [((x, y), ".")]
+  filter (isNotSpecCell oldCell) l ++ [((x, y), ".")]
 
 -- is player position at a cherry Cell?
 isCherry :: Integer -> Integer -> Level -> Bool

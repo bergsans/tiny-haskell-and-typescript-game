@@ -46,15 +46,15 @@ main = do
     gameloop w 3 3 0 level cameras
 
 gameloop :: Window -> Integer -> Integer -> Integer -> Level -> Cameras -> Curses ()
-gameloop w x y score l cs = 
-  if score == 13 || isAnyCameraHittingPlayer cs x y
+gameloop w x y score l cs =
+  if score == 13 || isAnyCamAtPlr cs x y
     then return ()
     else do
       updateWindow w $ do
         clear
         renderMap l
         renderPlayer x y
-        renderCamerasShooting cs
+        renderCamShot cs
         renderScore score
       render
       ev <- getEvent w (Just 100)
@@ -96,5 +96,5 @@ gameloop w x y score l cs =
               cameras
           | otherwise -> gameloop w x y score l cameras
         where
-          cameras = moveCameras cs l
+          cameras = moveCams cs l
 

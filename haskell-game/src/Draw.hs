@@ -3,7 +3,7 @@ module Draw (
   , renderMap
   , renderScore
   , nonNCursesClearScreen
-  , renderCamerasShooting
+  , renderCamShot
 ) where
 
 import           GameData
@@ -28,7 +28,7 @@ printable tile
 -- Put a Tile at a screen position
 putTile :: Cell -> Update ()
 putTile cell = do
-  moveCursor (2 + (getCellY $ getPosition cell)) (double $ getCellX $ getPosition cell)
+  moveCursor (getCellY (getPos cell) + 2) (double $ getCellX $ getPos cell)
   drawString (printable $ getTile cell)
 
 renderMap :: Level -> Update () -- Put Level on screen
@@ -37,12 +37,12 @@ renderMap l = sequence_ [putTile cell | cell <- l]
 -- Put a Camera "flash" at a screen position
 drawShot :: Camera -> Update ()
 drawShot c = do
-  moveCursor (2 + (getCellY $ fst c)) (double $ ((getCellX $ fst c) + (snd c)))
+  moveCursor (getCellY $ fst c) (double (getCellX (fst c) + snd c))
   drawString camShot
 
 -- Puts Cameras on Screen
-renderCamerasShooting :: Cameras -> Update ()
-renderCamerasShooting cs = sequence_ [drawShot c | c <- cs]
+renderCamShot :: Cameras -> Update ()
+renderCamShot cs = sequence_ [drawShot c | c <- cs]
 
 -- Puts score on Screen
 renderScore :: Integer -> Update()
