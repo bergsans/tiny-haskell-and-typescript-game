@@ -2,8 +2,8 @@
 
 module Lib
   ( getPos
-  , getCellX
-  , getCellY
+  , getX
+  , getY
   , getTile
   , level
   , Cell
@@ -28,8 +28,8 @@ side :: Integer
 side = 36
 
 -- split level-string on ""
-splitRawLevel :: String -> [[String]]
-splitRawLevel l = map (splitOn "") (lines l)
+splitLevel :: String -> [[String]]
+splitLevel l = map (splitOn "") (lines l)
 
 -- flatten a list one level
 flatten :: [[a]] -> [a]
@@ -41,15 +41,15 @@ notEmpty x = not (null x)
 
 -- splits "map" list to list of string containing tile
 purgedLevel :: [String]
-purgedLevel = filter notEmpty $ flatten $ splitRawLevel rawLevel
+purgedLevel = filter notEmpty $ flatten $ splitLevel rawLevel
 
 -- get y position on level in list
-getY :: Integer -> Integer -> Integer
-getY = div
+getListY :: Integer -> Integer -> Integer
+getListY = div
 
 -- get x position on level in list
-getX :: Integer -> Integer -> Integer
-getX = mod
+getListX :: Integer -> Integer -> Integer
+getListX = mod
 
 type Position = (Integer, Integer)
 
@@ -62,7 +62,7 @@ type Level = [Cell]
 -- creates a level
 level :: Level
 level =
-  [ ((getX (toInteger x) side, getY (toInteger x) side), y)
+  [ ((getListX (toInteger x) side, getListY (toInteger x) side), y)
   | x <- [0 .. length purgedLevel]
   | y <- purgedLevel
   ]
@@ -81,12 +81,12 @@ getPos :: Cell -> Position
 getPos = fst
 
 -- get x from Position of a Cell
-getCellX :: Position -> Integer
-getCellX pos = toInteger $ fst pos
+getX :: Position -> Integer
+getX pos = toInteger $ fst pos
 
 -- get y from Position of a Cell
-getCellY :: Position -> Integer
-getCellY pos = toInteger $ snd pos
+getY :: Position -> Integer
+getY pos = toInteger $ snd pos
 
 -- get tile from a Cell
 getTile :: Cell -> Tile
@@ -115,16 +115,16 @@ getCamDiff = snd
 -- move a camera x diff (if wall, restart)
 camMove :: Camera -> Level -> Camera
 camMove cam l =
-  if ((getCellX (fst cam) + getCamDiff cam + 1, getCellY $ fst cam)
+  if ((getX (fst cam) + getCamDiff cam + 1, getY $ fst cam)
      , ".") `elem` l
-    then ( (getCellX $ fst cam, getCellY $ fst cam)
+    then ( (getX $ fst cam, getY $ fst cam)
          , getCamDiff cam + 1)
-    else ((getCellX $ fst cam, getCellY $ fst cam), 1)
+    else ((getX $ fst cam, getY $ fst cam), 1)
 
 -- is player hit by a camera?
 isPlrHit :: Camera -> (Integer, Integer) -> Bool
 isPlrHit cam (x, y) =
-  (getCellX (fst cam) + snd cam, getCellY $ fst cam) == (x, y)
+  (getX (fst cam) + snd cam, getY $ fst cam) == (x, y)
 
 -- is any cam hitting plr?
 isAnyCamAtPlr :: Cameras -> Integer -> Integer -> Bool

@@ -28,7 +28,7 @@ printable tile
 -- Put a Tile at a screen position
 putTile :: Cell -> Update ()
 putTile cell = do
-  moveCursor (getCellY (getPos cell) + 2) (double $ getCellX $ getPos cell)
+  moveCursor (getY (getPos cell) + 2) (double $ getX $ getPos cell)
   drawString (printable $ getTile cell)
 
 renderMap :: Level -> Update () -- Put Level on screen
@@ -37,7 +37,7 @@ renderMap l = sequence_ [putTile cell | cell <- l]
 -- Put a Camera "flash" at a screen position
 drawShot :: Camera -> Update ()
 drawShot c = do
-  moveCursor (getCellY $ fst c) (double (getCellX (fst c) + snd c))
+  moveCursor (getY $ fst c) (double (getX (fst c) + snd c))
   drawString camShot
 
 -- Puts Cameras on Screen
