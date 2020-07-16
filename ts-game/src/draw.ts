@@ -1,3 +1,4 @@
+import { monsterWantsCookie } from './game-data';
 import { State, Camera } from './ts-game';
 
 interface TileTypes {
@@ -17,7 +18,12 @@ const tileTypes:TileTypes = {
   b: '  ',
 };
 
-export default function drawState(state: State) {
+export function drawIntroscreen() {
+  console.clear();
+  console.log(monsterWantsCookie());
+}
+
+export function drawState(state: State) {
   console.log(
     state.level
       .map((row: string[], y: number) => row

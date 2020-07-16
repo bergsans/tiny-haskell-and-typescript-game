@@ -1,5 +1,5 @@
 import { getLevel, Level } from './game-data';
-import drawState from './draw';
+import { drawState, drawIntroscreen } from './draw';
 import { eventHandler } from './events';
 import { Position, nextState } from './logic';
 
@@ -59,4 +59,6 @@ const gameLoop = (currentState: State) => {
   eH.reset();
   setTimeout(() => gameLoop(newState), 100);
 };
-gameLoop(initialState);
+
+drawIntroscreen();
+setTimeout(() => gameLoop(initialState), 2000);

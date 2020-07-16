@@ -1,7 +1,7 @@
 export type Level = string[][]
 
 export function getLevel(): Level {
-  const rawLevel: string = ` 
+  const rawLevel: string = `
 xxxxxxxbxxxxxxbbbbbbxxxxxxxxxxxxxbbb
 xx....xxx....xxxbbbbxo.....xxxxxxxxx
 x..............xxxxbx.........xxxxxx
@@ -43,3 +43,30 @@ bbbxxxxxxxxxxxxxxxxxxbbbxxxxxxxbbxxx`;
     .split('\n')
     .map((row) => row.split(''));
 }
+
+
+export const monsterWantsCookie = () => `
+   ███    ███  ██████  ███    ██ ███████ ████████ ███████ ██████ 
+   ████  ████ ██    ██ ████   ██ ██         ██    ██      ██   ██
+   ██ ████ ██ ██    ██ ██ ██  ██ ███████    ██    █████   ██████ 
+   ██  ██  ██ ██    ██ ██  ██ ██      ██    ██    ██      ██   ██
+   ██      ██  ██████  ██   ████ ███████    ██    ███████ ██   ██
+                                                                 
+
+   ██     ██  █████  ███    ██ ████████ ███████ 
+   ██     ██ ██   ██ ████   ██    ██    ██      
+   ██  █  ██ ███████ ██ ██  ██    ██    ███████ 
+   ██ ███ ██ ██   ██ ██  ██ ██    ██         ██ 
+    ███ ███  ██   ██ ██   ████    ██    ███████ 
+                                                
+
+    ██████  ██████   ██████  ██   ██ ██ ███████ ███████ 
+   ██      ██    ██ ██    ██ ██  ██  ██ ██      ██      
+   ██      ██    ██ ██    ██ █████   ██ █████   ███████ 
+   ██      ██    ██ ██    ██ ██  ██  ██ ██           ██ 
+    ██████  ██████   ██████  ██   ██ ██ ███████ ███████ 
+
+
+   - A Tiny Haskell Game (learning project).\n\
+     By Claes-Magnus Berg <claes-magnus@herebeseaswines.net>`;
+                                                     
