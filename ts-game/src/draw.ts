@@ -1,4 +1,4 @@
-import { State } from './ts-game';
+import { State, Camera } from './ts-game';
 
 interface TileTypes {
   c: string;
@@ -21,9 +21,16 @@ export default function drawState(state: State) {
   console.log(
     state.level
       .map((row: string[], y: number) => row
-        .map((tile: string, x: number) => (state.plr.x === x && state.plr.y === y
-          ? '👾'
-          : tileTypes[tile as keyof TileType]))
+        .map((tile: string, x: number) => {
+          if (state.plr.x === x && state.plr.y === y) {
+            return '👾';
+          } if (state.cameras.some(
+            (cam: Camera) => cam.pos.x + cam.diff === x && cam.pos.y === y,
+          )) {
+            return '💥';
+          }
+          return tileTypes[tile as keyof TileType];
+        })
         .join(''))
       .join('\n'),
   );

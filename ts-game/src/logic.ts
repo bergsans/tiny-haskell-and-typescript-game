@@ -1,6 +1,6 @@
 import { Level } from './game-data';
 import { EventHandler, UserEvent } from './events';
-import { State } from './ts-game';
+import { Camera, State } from './ts-game';
 
 type Diff = {
     0: number;
@@ -53,6 +53,16 @@ const isPlrAtCookie = (pos: Position, level: Level, score: number) => (level[pos
   ? ({ level: removeCookie(level, pos), score: score + 1 })
   : ({ level, score }));
 
+const isPlrHit = (pos: Position, cams: Camera[]) => cams.some(
+  (cam) => cam.pos.x + cam.diff === pos.x && cam.pos.y === pos.y,
+);
+
+const moveCams = (level: Level, cams: Camera[]) => cams.map(
+  (cam) => (level[cam.pos.y][cam.pos.x + cam.diff + 1] !== 'x'
+    ? ({ pos: cam.pos, diff: cam.diff + 1 })
+    : ({ pos: cam.pos, diff: 1 })),
+);
+
 export const nextState = (state: State, e: EventHandler) => {
   const isPlrMoving = e.getMoveDirection();
   const plr: Position = isPlrMoving
@@ -63,9 +73,13 @@ export const nextState = (state: State, e: EventHandler) => {
     )
     : state.plr;
   const { score, level } = isPlrAtCookie(state.plr, state.level, state.score);
+  const cameras = moveCams(state.level, state.cameras);
+  const plrIsHit = isPlrHit(state.plr, state.cameras);
   return {
     level,
     plr,
     score,
+    cameras,
+    plrIsHit,
   };
 };
