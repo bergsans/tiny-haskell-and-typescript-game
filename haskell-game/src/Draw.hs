@@ -37,7 +37,7 @@ renderMap l = sequence_ [putTile cell | cell <- l]
 -- Put a Camera "flash" at a screen position
 drawShot :: Camera -> Update ()
 drawShot c = do
-  moveCursor (getY $ fst c) (double (getX (fst c) + snd c))
+  moveCursor ((getY $ fst c) + 2) (double (getX (fst c) + snd c))
   drawString camShot
 
 -- Puts Cameras on Screen
