@@ -153,7 +153,7 @@ isCookie l x y = ((x, y), "o") `elem` l
 -- if on cookie Cell, inc score
 checkScore :: Level -> Integer -> Integer -> Integer -> Integer
 checkScore l x y score
-  | isCherry l x y = score + 1
+  | isCookie l x y = score + 1
   | otherwise      = score
 
 -- if on cookie cell, replace cell with floor

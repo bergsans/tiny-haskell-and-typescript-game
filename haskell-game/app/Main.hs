@@ -38,7 +38,7 @@ main :: IO ()
 main = do
   nonNCursesClearScreen
   putStrLn monsterWantsCookiesLogo
-  threadDelay 1000000
+  threadDelay 2000000
   runCurses $ do
     setCursorMode CursorInvisible
     setEcho False
