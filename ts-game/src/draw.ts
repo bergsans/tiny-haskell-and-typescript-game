@@ -27,4 +27,7 @@ export default function drawState(state: State) {
         .join(''))
       .join('\n'),
   );
+  console.log(`
+
+Cookies eaten: ${state.score}`);
 }
