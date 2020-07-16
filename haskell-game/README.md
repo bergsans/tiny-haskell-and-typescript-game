@@ -4,4 +4,4 @@
 
 # Installation
 
-I use stack. Use `stack build` and then `stack exec haskell-game-exe` to try.
+I use stack. Use `stack build` and then `stack exec haskell-game-exe` to try the game.
