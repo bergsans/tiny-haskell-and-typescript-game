@@ -106,7 +106,7 @@ type Cameras = [Camera]
 
 -- find cameras on level and create Cameras
 getCams :: Level -> Cameras
-getCams l = map createCamProps $ filter isCamera l
+getCams = map createCamProps . filter isCamera
 
 -- get temp x diff of a camera
 getCamDiff :: Camera -> Integer
@@ -147,19 +147,17 @@ removeCherry oldCell l x y =
   filter (isNotSpecCell oldCell) l ++ [((x, y), ".")]
 
 -- is player position at a cherry Cell?
-isCherry :: Integer -> Integer -> Level -> Bool
-isCherry x y l = ((x, y), "o") `elem` l
+isCherry :: Level -> Integer -> Integer -> Bool
+isCherry l x y = ((x, y), "o") `elem` l
 
 -- if on cherry Cell, inc score
 checkScore :: Level -> Integer -> Integer -> Integer -> Integer
-checkScore l x y score =
-  if isCherry x y l
-    then score + 1
-    else score
+checkScore l x y score
+  | isCherry l x y = score + 1
+  | otherwise      = score
 
 -- if on cherry cell, replace cell with floor
 checkLevel :: Level -> Integer -> Integer -> Level
-checkLevel l x y =
-  if isCherry x y l
-    then removeCherry ((x, y), "o") l x y
-    else l
+checkLevel l x y
+  | isCherry l x y = removeCherry ((x, y), "o") l x y
+  | otherwise      = l
