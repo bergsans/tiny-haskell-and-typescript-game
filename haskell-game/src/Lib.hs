@@ -82,11 +82,11 @@ getPos = fst
 
 -- get x from Position of a Cell
 getX :: Position -> Integer
-getX pos = toInteger $ fst pos
+getX = toInteger . fst
 
 -- get y from Position of a Cell
 getY :: Position -> Integer
-getY pos = toInteger $ snd pos
+getY = toInteger . snd
 
 -- get tile from a Cell
 getTile :: Cell -> Tile
