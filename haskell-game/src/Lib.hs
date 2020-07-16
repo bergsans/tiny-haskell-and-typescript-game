@@ -141,23 +141,23 @@ cameras = getCams level
 isNotSpecCell :: Cell -> Cell -> Bool
 isNotSpecCell c1 c2 = c1 /= c2
 
--- remove a cherry Cell from Level
-removeCherry :: Cell -> Level -> Integer -> Integer -> Level
-removeCherry oldCell l x y =
+-- remove a cookie Cell from Level
+removeCookie :: Cell -> Level -> Integer -> Integer -> Level
+removeCookie oldCell l x y =
   filter (isNotSpecCell oldCell) l ++ [((x, y), ".")]
 
--- is player position at a cherry Cell?
-isCherry :: Level -> Integer -> Integer -> Bool
-isCherry l x y = ((x, y), "o") `elem` l
+-- is player position at a cookie Cell?
+isCookie :: Level -> Integer -> Integer -> Bool
+isCookie l x y = ((x, y), "o") `elem` l
 
--- if on cherry Cell, inc score
+-- if on cookie Cell, inc score
 checkScore :: Level -> Integer -> Integer -> Integer -> Integer
 checkScore l x y score
   | isCherry l x y = score + 1
   | otherwise      = score
 
--- if on cherry cell, replace cell with floor
+-- if on cookie cell, replace cell with floor
 checkLevel :: Level -> Integer -> Integer -> Level
 checkLevel l x y
-  | isCherry l x y = removeCherry ((x, y), "o") l x y
+  | isCookie l x y = removeCookie ((x, y), "o") l x y
   | otherwise      = l
