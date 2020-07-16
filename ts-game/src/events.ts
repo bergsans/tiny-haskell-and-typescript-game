@@ -15,16 +15,19 @@ type Direction = keyof Directions<boolean>;
 const commands: Direction[] = ['up', 'right', 'down', 'left'];
 
 export interface EventHandler {
-  getValues: () => UserEvent;
+  exitEvent: () => boolean;
   reset: () => UserEvent;
   getMoveDirection: () => string | boolean;
 }
 
+const DIRECTION_STRING: number = 0;
+
 export const eventHandler = () => {
+  let gameEventExit = false;
   const events: UserEvent = { ...defaultEventState() };
   const handleKeyEvent = (_: string, key: any) => {
     if (key.name === 'q') {
-      process.exit(0);
+      gameEventExit = true;
     } else if (commands.includes(key.name)) {
       Object.assign(
         events,
@@ -37,14 +40,14 @@ export const eventHandler = () => {
   readline.emitKeypressEvents(process.stdin);
   process.stdin.on('keypress', handleKeyEvent);
   return {
-    getValues: () => ({ ...events }),
+    exitEvent: () => gameEventExit,
     reset: () => Object.assign(events, defaultEventState()),
     getMoveDirection: () => {
-      const dirs: [string, boolean][] = Object.entries(events);
-      const res: [string, boolean] | undefined = dirs.find(
-        (v: [string, boolean]) => v[1] === true,
+      const directions: [string, boolean][] = Object.entries(events);
+      const moveInDirection: [string, boolean] | undefined = directions.find(
+        ([_, isDirection]: [string, boolean]) => isDirection === true,
       );
-      return res !== undefined ? res[0] : false;
+      return moveInDirection !== undefined ? moveInDirection[DIRECTION_STRING] : false;
     },
   };
 };

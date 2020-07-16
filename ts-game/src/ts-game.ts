@@ -23,7 +23,7 @@ const eH = eventHandler();
 const gameLoop = (currentState: State) => {
   console.clear();
   drawState(currentState);
-  if (currentState.score === 13) {
+  if (currentState.score === 13 || eH.exitEvent()) {
     process.exit(0);
   }
   const newState: State = nextState(currentState, eH);
