@@ -20,8 +20,8 @@ module Lib
   , isAnyCamAtPlr
   ) where
 
-import           Data.List.Split
-import           GameData
+import Data.List.Split
+import GameData
 
 -- a side of level
 side :: Integer
@@ -70,10 +70,10 @@ level =
 -- can player move to cell
 isMovePossible :: Integer -> Integer -> String -> Level -> Bool
 isMovePossible x y direction l
-  | direction == "Up"    && notElem ((x, y - 1), "x") l = True
+  | direction == "Up" && notElem ((x, y - 1), "x") l = True
   | direction == "Right" && notElem ((x + 1, y), "x") l = True
-  | direction == "Down"  && notElem ((x, y + 1), "x") l = True
-  | direction == "Left"  && notElem ((x - 1, y), "x") l = True
+  | direction == "Down" && notElem ((x, y + 1), "x") l = True
+  | direction == "Left" && notElem ((x - 1, y), "x") l = True
   | otherwise = False
 
 -- get Position of a Cell
@@ -114,17 +114,14 @@ getCamDiff = snd
 
 -- move a camera x diff (if wall, restart)
 camMove :: Camera -> Level -> Camera
-camMove cam l =
-  if ((getX (fst cam) + getCamDiff cam + 1, getY $ fst cam)
-     , ".") `elem` l
-    then ( (getX $ fst cam, getY $ fst cam)
-         , getCamDiff cam + 1)
-    else ((getX $ fst cam, getY $ fst cam), 1)
+camMove cam l
+  | ((getX (fst cam) + getCamDiff cam + 1, getY $ fst cam), ".") `elem` l =
+    ((getX $ fst cam, getY $ fst cam), getCamDiff cam + 1)
+  | otherwise = ((getX $ fst cam, getY $ fst cam), 1)
 
 -- is player hit by a camera?
 isPlrHit :: Camera -> (Integer, Integer) -> Bool
-isPlrHit cam (x, y) =
-  (getX (fst cam) + snd cam, getY $ fst cam) == (x, y)
+isPlrHit cam (x, y) = (getX (fst cam) + snd cam, getY $ fst cam) == (x, y)
 
 -- is any cam hitting plr?
 isAnyCamAtPlr :: Cameras -> Integer -> Integer -> Bool
@@ -143,8 +140,7 @@ isNotSpecCell c1 c2 = c1 /= c2
 
 -- remove a cookie Cell from Level
 removeCookie :: Cell -> Level -> Integer -> Integer -> Level
-removeCookie oldCell l x y =
-  filter (isNotSpecCell oldCell) l ++ [((x, y), ".")]
+removeCookie oldCell l x y = filter (isNotSpecCell oldCell) l ++ [((x, y), ".")]
 
 -- is player position at a cookie Cell?
 isCookie :: Level -> Integer -> Integer -> Bool
@@ -154,10 +150,10 @@ isCookie l x y = ((x, y), "o") `elem` l
 checkScore :: Level -> Integer -> Integer -> Integer -> Integer
 checkScore l x y score
   | isCookie l x y = score + 1
-  | otherwise      = score
+  | otherwise = score
 
 -- if on cookie cell, replace cell with floor
 checkLevel :: Level -> Integer -> Integer -> Level
 checkLevel l x y
   | isCookie l x y = removeCookie ((x, y), "o") l x y
-  | otherwise      = l
+  | otherwise = l
