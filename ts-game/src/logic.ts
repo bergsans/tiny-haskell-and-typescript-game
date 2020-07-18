@@ -63,23 +63,15 @@ const moveCams = (level: Level, cams: Camera[]) => cams.map(
     : ({ pos: cam.pos, diff: 1 })),
 );
 
-export const nextState = (state: State, e: EventHandler) => {
-  const isPlrMoving = e.getMoveDirection();
-  const plr: Position = isPlrMoving
+export const nextState = (state: State, e: EventHandler) => ({
+  ...isPlrAtCookie(state.plr, state.level, state.score),
+  plr: e.getMoveDirection()
     ? attemptMove(
       state,
       state.level,
-      moveDirs[(isPlrMoving as keyof Directions<Diff>)],
+      moveDirs[(e.getMoveDirection() as keyof Directions<Diff>)],
     )
-    : state.plr;
-  const { score, level } = isPlrAtCookie(state.plr, state.level, state.score);
-  const cameras = moveCams(state.level, state.cameras);
-  const plrIsHit = isPlrHit(state.plr, state.cameras);
-  return {
-    level,
-    plr,
-    score,
-    cameras,
-    plrIsHit,
-  };
-};
+    : state.plr,
+  cameras: moveCams(state.level, state.cameras),
+  plrIsHit: isPlrHit(state.plr, state.cameras),
+});

@@ -3,6 +3,8 @@ import { drawState, drawIntroscreen } from './draw';
 import { eventHandler } from './events';
 import { Position, nextState } from './logic';
 
+const eH = eventHandler();
+
 export interface Camera {
   pos: Position;
   diff: number;
@@ -36,19 +38,6 @@ const getCams = (level: Level) => level
     [],
   );
 
-const initialState:State = {
-  level: getLevel(),
-  plr: {
-    x: 2,
-    y: 2,
-  },
-  score: 0,
-  cameras: getCams(getLevel()),
-  plrIsHit: false,
-};
-
-const eH = eventHandler();
-
 const gameLoop = (currentState: State) => {
   if (currentState.score === 13 || eH.exitEvent() || currentState.plrIsHit) {
     process.exit(0);
@@ -61,4 +50,13 @@ const gameLoop = (currentState: State) => {
 };
 
 drawIntroscreen();
-setTimeout(() => gameLoop(initialState), 2000);
+setTimeout(() => gameLoop({
+  level: getLevel(),
+  plr: {
+    x: 2,
+    y: 2,
+  },
+  score: 0,
+  cameras: getCams(getLevel()),
+  plrIsHit: false,
+}), 2000);

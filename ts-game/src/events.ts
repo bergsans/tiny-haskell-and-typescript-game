@@ -47,9 +47,9 @@ export const eventHandler = () => {
       const moveInDirection: [string, boolean] | undefined = directions.find(
         ([_, isDirection]: [string, boolean]) => isDirection === true,
       );
-      return moveInDirection !== undefined 
-      ? moveInDirection[DIRECTION_STRING]
-      : false;
+      return moveInDirection !== undefined
+        ? moveInDirection[DIRECTION_STRING]
+        : false;
     },
   };
 };
