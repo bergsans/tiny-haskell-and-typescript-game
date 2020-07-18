@@ -70,10 +70,10 @@ level =
 -- can player move to cell
 isMovePossible :: Integer -> Integer -> String -> Level -> Bool
 isMovePossible x y direction l
-  | direction == "Up" && notElem ((x, y - 1), "x") l = True
+  | direction == "Up"    && notElem ((x, y - 1), "x") l = True
   | direction == "Right" && notElem ((x + 1, y), "x") l = True
-  | direction == "Down" && notElem ((x, y + 1), "x") l = True
-  | direction == "Left" && notElem ((x - 1, y), "x") l = True
+  | direction == "Down"  && notElem ((x, y + 1), "x") l = True
+  | direction == "Left"  && notElem ((x - 1, y), "x") l = True
   | otherwise = False
 
 -- get Position of a Cell
@@ -115,8 +115,8 @@ getCamDiff = snd
 -- move a camera x diff (if wall, restart)
 camMove :: Camera -> Level -> Camera
 camMove cam l
-  | ((getX (fst cam) + getCamDiff cam + 1, getY $ fst cam), ".") `elem` l =
-    ((getX $ fst cam, getY $ fst cam), getCamDiff cam + 1)
+  | ((getX (fst cam) + getCamDiff cam + 1, getY $ fst cam), ".") `elem` l
+  = ((getX $ fst cam, getY $ fst cam), getCamDiff cam + 1)
   | otherwise = ((getX $ fst cam, getY $ fst cam), 1)
 
 -- is player hit by a camera?
@@ -150,10 +150,10 @@ isCookie l x y = ((x, y), "o") `elem` l
 checkScore :: Level -> Integer -> Integer -> Integer -> Integer
 checkScore l x y score
   | isCookie l x y = score + 1
-  | otherwise = score
+  | otherwise      = score
 
 -- if on cookie cell, replace cell with floor
 checkLevel :: Level -> Integer -> Integer -> Level
 checkLevel l x y
   | isCookie l x y = removeCookie ((x, y), "o") l x y
-  | otherwise = l
+  | otherwise      = l
