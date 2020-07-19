@@ -9,6 +9,7 @@ module Draw (
 import           GameData
 import           Lib
 import           UI.NCurses
+import           Data.Foldable
 
 double :: Integer -> Integer
 double x = x + x
@@ -42,7 +43,7 @@ drawShot c = do
 
 -- Puts Cameras on Screen
 renderCamShot :: Cameras -> Update ()
-renderCamShot cs = sequence_ [drawShot c | c <- cs]
+renderCamShot = traverse_ drawShot
 
 -- Puts score on Screen
 renderScore :: Integer -> Update()
