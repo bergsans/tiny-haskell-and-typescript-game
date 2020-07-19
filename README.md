@@ -6,6 +6,6 @@ I wanted to learn about Haskell and handling side-effects in Haskell. A game-ish
 
 My aim is to make 'the same' game/demo in Haskell and TypeScript.
 
-## Screenshot from Haskell version
+## Screenshot from the Haskell version
 
 ![](screenshot.gif)
